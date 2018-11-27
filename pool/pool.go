@@ -249,6 +249,11 @@ func (p *pool) cleanUpIdleNodes(force bool) {
 }
 
 func (p *pool) put(hc *hbase.HbaseClient, forceClose bool) error {
+	if p.IsClosed() {
+		_ = hc.Transport.Close()
+		return ErrPoolClosed
+	}
+
 	p.Lock()
 
 	if !forceClose {

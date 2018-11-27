@@ -55,7 +55,7 @@ func NewMutation(column, value string) *hbase.Mutation {
 
 func NewHbasePool() pool.Pool {
 	opts := []pool.Option{
-		pool.WithAddrs("10.6.6.6:6666", "10.8.8.8:8888"),
+		pool.WithAddrs("6.6.6.6:6666", "8.8.8.8:8888"),
 		pool.WithUpdatePickerInterval(time.Second * 10),
 		pool.WithMaxActive(8),
 		pool.WithMaxIdle(8),

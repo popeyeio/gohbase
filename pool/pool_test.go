@@ -65,7 +65,7 @@ func TestPool_IsClosed(t *testing.T) {
 
 func newPool() Pool {
 	opts := []Option{
-		WithAddrs("10.10.163.75:31057", "10.10.171.12:31363"),
+		WithAddrs("6.6.6.6:6666", "8.8.8.8:8888"),
 		WithUpdatePickerInterval(time.Second * 2),
 		WithMaxActive(1),
 		WithMaxIdle(1),

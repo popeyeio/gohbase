@@ -84,6 +84,7 @@ func (p *pool) Get() (Client, error) {
 
 	for {
 		if p.IsClosed() {
+			p.Unlock()
 			return nil, ErrPoolClosed
 		}
 
@@ -190,15 +191,14 @@ func (p *pool) asyncUpdatePicker() {
 }
 
 func (p *pool) updatePicker() error {
-	p.Lock()
-	defer p.Unlock()
-
 	instances, err := p.discovery.Discover()
 	if err != nil {
 		return err
 	}
 
+	p.Lock()
 	p.picker = p.balancer.NewPicker(instances)
+	p.Unlock()
 	return nil
 }
 

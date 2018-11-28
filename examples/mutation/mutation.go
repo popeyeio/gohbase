@@ -57,6 +57,7 @@ func NewHbasePool() pool.Pool {
 	opts := []pool.Option{
 		pool.WithAddrs("6.6.6.6:6666", "8.8.8.8:8888"),
 		pool.WithUpdatePickerInterval(time.Second * 10),
+		pool.WithSocketTimeout(time.Second * 5),
 		pool.WithMaxActive(8),
 		pool.WithMaxIdle(8),
 		pool.WithIdleTimeout(time.Second * 5),

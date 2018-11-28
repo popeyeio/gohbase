@@ -29,7 +29,7 @@ func TestPool_Get(t *testing.T) {
 			if err != nil {
 				t.Logf("GetTableNames error - %v", err)
 			} else {
-				t.Logf("names: %v", names)
+				t.Logf("table names are %v", names)
 			}
 		}(c, i)
 	}
@@ -67,6 +67,7 @@ func newPool() Pool {
 	opts := []Option{
 		WithAddrs("6.6.6.6:6666", "8.8.8.8:8888"),
 		WithUpdatePickerInterval(time.Second * 2),
+		WithSocketTimeout(time.Second * 5),
 		WithMaxActive(1),
 		WithMaxIdle(1),
 		WithIdleTimeout(time.Second * 1),

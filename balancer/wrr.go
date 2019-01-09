@@ -20,19 +20,21 @@ func (WRRBalancer) Name() string {
 }
 
 func (b *WRRBalancer) NewPicker(instances []instance.Instance) Picker {
-	balancer := &wrrPicker{
+	picker := &wrrPicker{
 		instances: instances,
+		size:      len(instances),
 		weights:   make([]int, len(instances)),
 	}
 	for _, ins := range instances {
-		balancer.total += ins.GetWeight()
+		picker.total += ins.GetWeight()
 	}
-	return balancer
+	return picker
 }
 
 type wrrPicker struct {
-	mu        sync.Mutex
+	sync.Mutex
 	instances []instance.Instance
+	size      int
 	weights   []int
 	total     int
 }
@@ -40,12 +42,12 @@ type wrrPicker struct {
 var _ Picker = (*wrrPicker)(nil)
 
 func (p *wrrPicker) Pick() (instance.Instance, error) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	if len(p.instances) <= 0 {
+	if p.size <= 0 {
 		return nil, ErrNoInstance
 	}
+
+	p.Lock()
+	defer p.Unlock()
 
 	max := 0
 	for i, ins := range p.instances {

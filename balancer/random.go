@@ -1,10 +1,9 @@
 package balancer
 
 import (
-	"math/rand"
-	"sync"
-
 	"github.com/popeyeio/gohbase/instance"
+
+	"github.com/valyala/fastrand"
 )
 
 type RandomBalancer struct {
@@ -27,20 +26,15 @@ func (b *RandomBalancer) NewPicker(instances []instance.Instance) Picker {
 }
 
 type randomPicker struct {
-	mu        sync.Mutex
 	instances []instance.Instance
+	size      uint32
 }
 
 var _ Picker = (*randomPicker)(nil)
 
 func (p *randomPicker) Pick() (instance.Instance, error) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	if len(p.instances) <= 0 {
+	if p.size <= 0 {
 		return nil, ErrNoInstance
 	}
-
-	i := rand.Intn(len(p.instances))
-	return p.instances[i], nil
+	return p.instances[fastrand.Uint32n(p.size)], nil
 }

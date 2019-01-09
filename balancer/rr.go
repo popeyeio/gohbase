@@ -1,7 +1,7 @@
 package balancer
 
 import (
-	"sync"
+	"sync/atomic"
 
 	"github.com/popeyeio/gohbase/instance"
 )
@@ -22,26 +22,21 @@ func (RRBalancer) Name() string {
 func (b *RRBalancer) NewPicker(instances []instance.Instance) Picker {
 	return &rrPicker{
 		instances: instances,
+		size:      uint32(len(instances)),
 	}
 }
 
 type rrPicker struct {
-	mu        sync.Mutex
 	instances []instance.Instance
-	next      int
+	size      uint32
+	next      uint32
 }
 
 var _ Picker = (*rrPicker)(nil)
 
 func (p *rrPicker) Pick() (instance.Instance, error) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	if len(p.instances) <= 0 {
+	if p.size <= 0 {
 		return nil, ErrNoInstance
 	}
-
-	ins := p.instances[p.next]
-	p.next = (p.next + 1) % len(p.instances)
-	return ins, nil
+	return p.instances[(atomic.AddUint32(&p.next, 1)-1)%p.size], nil
 }

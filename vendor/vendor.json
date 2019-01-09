@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "BuRIFDyMuMAlTFA0IsAbrNMnGLk=",
+			"path": "github.com/valyala/fastrand",
+			"revision": "19dd0f0bf014a807b05fd196f4da235af618fc94",
+			"revisionTime": "2017-05-31T15:36:57Z"
+		}
+	],
+	"rootPath": "github.com/popeyeio/gohbase"
+}

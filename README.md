@@ -1,2 +1,2 @@
 # gohbase
-HBase client in Golang
+hbase client in golang
